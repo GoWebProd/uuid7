@@ -9,7 +9,6 @@ import (
 )
 
 type Generator struct {
-	lastMS  int64
 	counter uint32
 	mu      sync.Mutex
 	rnd     rand.Source
