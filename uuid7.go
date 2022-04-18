@@ -1,10 +1,10 @@
 package uuid7
 
 import (
+	"encoding/binary"
 	"math/rand"
 	"sync/atomic"
 	"time"
-	"unsafe"
 
 	"github.com/GoWebProd/gip/fasttime"
 )
@@ -27,11 +27,8 @@ func (u *Generator) Next() string {
 
 	var val [16]byte
 
-	val1 := (*uint64)(unsafe.Pointer(&val[0]))
-	val2 := (*uint64)(unsafe.Pointer(&val[8]))
-
-	*val1 = (2 << 62) | ((uint64(cnt) & 0xFFF) << 50) | (uint64(u.rnd.Int63()) & 0xFFFFFFFFFFFFF)
-	*val2 = (uint64(ts) << 16) + (7 << 12) + uint64(u.rnd.Int63())&0xFFF
+	binary.LittleEndian.PutUint64(val[0:8], (2<<62)|((uint64(cnt)&0xFFF)<<50)|(uint64(u.rnd.Int63())&0xFFFFFFFFFFFFF))
+	binary.LittleEndian.PutUint64(val[8:16], (uint64(ts)<<16)+(7<<12)+uint64(u.rnd.Int63())&0xFFF)
 
 	var buf [36]byte
 
