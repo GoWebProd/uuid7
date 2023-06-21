@@ -23,6 +23,11 @@ func New() *Generator {
 func (u *Generator) Next() UUID {
 	ts := fasttime.NowNano() / 1_000_000
 
+	return u.NextWithTimestamp(ts)
+}
+
+// Timestamp in milliseconds
+func (u *Generator) NextWithTimestamp(ts int64) UUID {
 	u.mu.Lock()
 
 	u.counter += 1
