@@ -1,7 +1,6 @@
 package uuid7
 
 import (
-	"encoding/binary"
 	"math/rand"
 	"sync"
 
@@ -38,10 +37,5 @@ func (u *Generator) NextWithTimestamp(ts int64) UUID {
 
 	u.mu.Unlock()
 
-	var val [16]byte
-
-	binary.LittleEndian.PutUint64(val[0:8], (2<<62)|((uint64(cnt)&0xFFF)<<50)|(rnd1&0xFFFFFFFFFFFFF))
-	binary.LittleEndian.PutUint64(val[8:16], (uint64(ts)<<16)+(7<<12)+rnd2&0xFFF)
-
-	return val
+	return From(cnt, rnd1, rnd2, ts)
 }

@@ -1,6 +1,7 @@
 package uuid7
 
 import (
+	"bytes"
 	"encoding/binary"
 	"unsafe"
 
@@ -13,6 +14,15 @@ var (
 	ErrBadUUID    = errors.New("bad UUID")
 	ErrBadVersion = errors.New("bad UUID version")
 )
+
+func From(cnt uint32, rnd1 uint64, rnd2 uint64, ts int64) UUID {
+	var val [16]byte
+
+	binary.LittleEndian.PutUint64(val[0:8], (2<<62)|((uint64(cnt)&0xFFF)<<50)|(rnd1&0xFFFFFFFFFFFFF))
+	binary.LittleEndian.PutUint64(val[8:16], (uint64(ts)<<16)+(7<<12)+rnd2&0xFFF)
+
+	return val
+}
 
 func Parse(uuid string) (UUID, error) {
 	var u UUID
@@ -92,4 +102,10 @@ func (u UUID) String() string {
 	byteToHex(buf[0:2], u[15])
 
 	return string(buf[:])
+}
+
+var emptyUUID [16]byte
+
+func (u UUID) Empty() bool {
+	return bytes.Equal(u[:], emptyUUID[:])
 }
