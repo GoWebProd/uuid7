@@ -27,11 +27,11 @@ func From(cnt uint32, rnd1 uint64, rnd2 uint64, ts int64) UUID {
 func Parse(uuid string) (UUID, error) {
 	var u UUID
 
-	s := *(*[]byte)(unsafe.Pointer(&uuid))
-
-	if len(s) != 36 {
+	if len(uuid) != 36 {
 		return u, ErrBadUUID
 	}
+
+	s := *(*[36]byte)(unsafe.Pointer(unsafe.StringData(uuid)))
 
 	if s[8] != '-' || s[13] != '-' || s[18] != '-' || s[23] != '-' {
 		return u, ErrBadUUID
