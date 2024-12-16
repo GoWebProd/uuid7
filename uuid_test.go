@@ -17,3 +17,25 @@ func TestCapacity(t *testing.T) {
 		t.Fatal("bad uuid bytes cap")
 	}
 }
+
+func TestInvalidVersion(t *testing.T) {
+	stringTest := "a47a4eb2-b51e-43c0-9fba-cf0407889823"
+
+	if _, err := Parse(stringTest); err == nil {
+		t.Error("Error must be not nil")
+	}
+}
+
+func TestInvalidFormat(t *testing.T) {
+	stringTest := "a47a4eb2_b51e-43c0-9fba-cf0407889823"
+
+	if _, err := Parse(stringTest); err == nil {
+		t.Error("Error must be not nil")
+	}
+
+	stringTest = "z47a4eb2-b51e-43c0-9fba-cf0407889823"
+
+	if _, err := Parse(stringTest); err == nil {
+		t.Error("Error must be not nil")
+	}
+}

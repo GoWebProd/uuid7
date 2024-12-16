@@ -68,6 +68,15 @@ func Parse(uuid string) (UUID, error) {
 	return u, nil
 }
 
+func MustParse(s string) UUID {
+	uuid, err := Parse(s)
+	if err != nil {
+		panic(`uuid: Parse(` + s + `): ` + err.Error())
+	}
+
+	return uuid
+}
+
 func (u UUID) version() uint32 {
 	return uint32(u[9] >> 4)
 }
